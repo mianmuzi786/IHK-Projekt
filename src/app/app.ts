@@ -1,12 +1,18 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],
+  template: `
+    <nav>
+      <a routerLink="/bookings">Termine</a> |
+      <a routerLink="/bookings/new">Neue Buchung</a> |
+      <a routerLink="/calendar">Kalender</a>
+    </nav>
+    <hr />
+    <router-outlet></router-outlet>
+  `
 })
-export class App {
-  protected readonly title = signal('booking-frontend');
-}
+export class AppComponent {}

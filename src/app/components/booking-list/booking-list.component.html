@@ -1,1 +1,32 @@
-<p>booking-list works!</p>
+<h2>Buchungsliste</h2>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Titel</th>
+    <th>Datum</th>
+    <th>Zeit</th>
+    <th>Person</th>
+    <th>Mit wem</th>
+    <th>Zweck</th>
+    <th>Email</th>
+    <th>Dauer</th>
+    <th>Status</th>
+    <th>Aktionen</th>
+  </tr>
+  <tr *ngFor="let b of bookings">
+    <td>{{ b.title }}</td>
+    <td>{{ b.date }}</td>
+    <td>{{ b.time }}</td>
+    <td>{{ b.personName }}</td>
+    <td>{{ b.withWhom }}</td>
+    <td>{{ b.purpose }}</td>
+    <td>{{ b.email }}</td>
+    <td>{{ b.duration }}</td>
+    <td>{{ b.status }}</td>
+    <td>
+      <button type="button" (click)="confirmBooking(b.id)" [disabled]="b.status==='confirmed'">✔ Bestätigen</button>
+      <button type="button" (click)="rejectBooking(b.id)" [disabled]="b.status==='rejected'">✖ Ablehnen</button>
+      <button type="button" (click)="deleteBooking(b.id)">🗑 Löschen</button>
+    </td>
+  </tr>
+</table>

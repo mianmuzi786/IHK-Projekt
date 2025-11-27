@@ -1,0 +1,58 @@
+/* Monatsansicht */
+.view-switch {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.view-switch button.active {
+  background: #007bff;
+  color: white;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.month-day {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 0.4rem;
+  min-height: 90px;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.month-day.other-month {
+  background: #eee;
+  opacity: 0.6;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.booking-card.small {
+  font-size: 0.7rem;
+  padding: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.add-btn {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  background: #007bff;
+  color: white;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+}
