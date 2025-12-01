@@ -1,0 +1,53 @@
+<div class="sidebar">
+    <div class="sidebar">
+  
+  <div class="logo-area">
+    <img src="sifamo.png" alt="sifamo Logo" class="company-logo">
+    
+  </div>
+
+  <nav class="nav-menu">
+    
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-speedometer2 icon"></i>
+      <span class="label">Dashboard</span>
+    </a>
+
+    <a routerLink="/calendar" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-calendar3 icon"></i>
+      <span class="label">Kalender</span>
+    </a>
+
+    <a routerLink="/bookings" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+      <i class="bi bi-table icon"></i>
+      <span class="label">Alle Termine</span>
+    </a>
+
+    <a routerLink="/bookings/new" routerLinkActive="active" class="nav-item highlight">
+      <i class="bi bi-plus-circle-fill icon"></i>
+      <span class="label">Neue Buchung</span>
+    </a>
+
+    <div class="divider"></div>
+
+    <a class="nav-item disabled">
+      <i class="bi bi-people-fill icon"></i>
+      <span class="label">Mitarbeiter</span>
+    </a>
+    
+    <a class="nav-item disabled">
+      <i class="bi bi-gear-wide-connected icon"></i>
+      <span class="label">Services</span>
+    </a>
+
+    <a class="nav-item disabled">
+      <i class="bi bi-sliders icon"></i>
+      <span class="label">Einstellungen</span>
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="version">v1.0.0</div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+/* WICHTIG: Reset, damit die App 100% Höhe hat */
+:host {
+  display: block;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app-layout {
+  display: flex;       /* Macht Sidebar und Main nebeneinander */
+  height: 100vh;       /* Volle Höhe */
+  width: 100vw;        /* Volle Breite */
+  background-color: #f4f7fe; /* Hintergrundfarbe hellgrau */
+  overflow: hidden;    /* Verhindert Scrollen der ganzen Seite */
+}
+
+.main-content {
+  flex: 1;             /* Nimmt den restlichen Platz ein */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.top-bar {
+  height: 64px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.avatar {
+  background: #3f51b5;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+/* Der Bereich für deine Komponenten */
+.content-area {
+  flex: 1;
+  overflow-y: auto; /* Nur dieser Bereich scrollt */
+  padding: 2rem;
+}

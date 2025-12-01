@@ -1,0 +1,131 @@
+/* --- Sidebar Container --- */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  /* Der Verlauf aus dem Screenshot (Blau zu Lila) */
+  background: linear-gradient(135deg, #6b5ce7 0%, #5a4ad1 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  flex-shrink: 0;
+}
+
+/* --- Logo Bereich --- */
+/* sidebar.scss */
+
+.logo-area {
+  height: 70px;
+  display: flex;
+  align-items: center; /* WICHTIG: Zentriert Logo und Text vertikal */
+  padding: 0 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  /* Stell sicher, dass hier KEIN 'flex-direction: column' steht! */
+}
+
+/* NEU: Das Styling für das Logobild */
+.company-logo {
+  /* Wir begrenzen die Höhe, damit es in die Leiste passt */
+  max-height: 100px; 
+  /* Die Breite passt sich automatisch an, damit nichts verzerrt wird */
+  width: auto;
+  /* Abstand zum Text daneben */
+  margin-right: 12px;
+  
+  /* OPTIONAL: Falls dein Logo dunkel ist und man es auf dem blauen
+     Hintergrund nicht sieht, kannst du es weiß hinterlegen: */
+  /* background: white;
+  padding: 5px;
+  border-radius: 6px;
+  */
+}
+
+.logo-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.5px;
+  color: white;
+}
+.logo-icon {
+  font-size: 1.8rem;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* --- Navigation --- */
+.nav-menu {
+  padding: 1.5rem 0.8rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Abstand zwischen Buttons */
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Icon Abstand */
+.nav-item .icon {
+  margin-right: 12px;
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+/* Hover Effekt */
+.nav-item:hover {
+  background-color: rgba(250, 250, 250, 0.15);
+  color: white;
+}
+
+/* Aktiver Link (Weißer Hintergrund, blaue Schrift) - Wie im Screenshot */
+.nav-item.active {
+  background-color: #ffffff;
+  color: #5a4ad1; /* Das Blau des Hintergrunds */
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* "Neue Buchung" Button hervorheben */
+.nav-item.highlight {
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.nav-item.highlight:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  margin: 15px 10px;
+}
+
+/* --- Footer --- */
+.sidebar-footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+}
