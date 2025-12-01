@@ -1,32 +1,83 @@
-<h2>Buchungsliste</h2>
+<div class="booking-container">
+  <header class="list-header">
+    <h2 class="page-title">Termine verwalten</h2>
+    <div class="user-info">
+      <span>Angemeldet als: <strong>Muzzafar Ahmad</strong></span>
+    </div>
+  </header>
 
-<table border="1" cellpadding="5">
-  <tr>
-    <th>Titel</th>
-    <th>Datum</th>
-    <th>Zeit</th>
-    <th>Person</th>
-    <th>Mit wem</th>
-    <th>Zweck</th>
-    <th>Email</th>
-    <th>Dauer</th>
-    <th>Status</th>
-    <th>Aktionen</th>
-  </tr>
-  <tr *ngFor="let b of bookings">
-    <td>{{ b.title }}</td>
-    <td>{{ b.date }}</td>
-    <td>{{ b.time }}</td>
-    <td>{{ b.personName }}</td>
-    <td>{{ b.withWhom }}</td>
-    <td>{{ b.purpose }}</td>
-    <td>{{ b.email }}</td>
-    <td>{{ b.duration }}</td>
-    <td>{{ b.status }}</td>
-    <td>
-      <button type="button" (click)="confirmBooking(b.id)" [disabled]="b.status==='confirmed'">✔ Bestätigen</button>
-      <button type="button" (click)="rejectBooking(b.id)" [disabled]="b.status==='rejected'">✖ Ablehnen</button>
-      <button type="button" (click)="deleteBooking(b.id)">🗑 Löschen</button>
-    </td>
-  </tr>
-</table>
+  <div class="cards-list">
+
+    @for (b of bookings(); track b.id) {
+      
+      <div class="booking-card">
+        
+        <div class="status-stripe"
+             [ngClass]="{
+               'confirmed': b.status === 'confirmed',
+               'rejected': b.status === 'rejected',
+               'pending': b.status === 'pending'
+             }">
+        </div>
+
+        <div class="card-content-wrapper">
+
+          <div class="checkbox-wrapper">
+            <input type="checkbox">
+          </div>
+
+          <div class="card-main-info">
+            <h3 class="event-title">{{ b.title }}</h3>
+            
+            <div class="event-details">
+              <span class="detail-item">⏱️ {{ b.duration }} min</span>
+              <span class="separator">•</span>
+              <span class="detail-item">👤 {{ b.personName }} (mit {{ b.withWhom }})</span>
+            </div>
+
+            <div class="event-schedule">
+              📅 {{ b.date }} um {{ b.time }} Uhr
+            </div>
+          </div>
+
+          <div class="card-actions">
+            
+            <button class="btn-outline">
+              🔗 Link
+            </button>
+            
+            <button class="btn-icon check" 
+                    title="Bestätigen"
+                    (click)="confirmBooking(b.id)"
+                    *ngIf="b.status === 'pending'">
+              ✔
+            </button>
+
+            <button class="btn-icon cross" 
+                    title="Ablehnen"
+                    (click)="rejectBooking(b.id)"
+                    *ngIf="b.status === 'pending'">
+              ✖
+            </button>
+
+            <button class="btn-icon trash" 
+                    title="Löschen"
+                    (click)="deleteBooking(b.id)">
+              🗑
+            </button>
+
+          </div>
+
+          </div>
+
+        </div>
+      
+
+    } @empty {
+      <div class="empty-state">
+        <p>Keine Buchungen vorhanden.</p>
+      </div>
+    }
+
+  </div>
+</div>

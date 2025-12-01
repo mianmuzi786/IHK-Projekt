@@ -1,10 +1,13 @@
 export interface Appointment {
-  id?: number;
+  id: number;
   title: string;
-  description?: string;
   date: string;
   time: string;
-  duration?: number;
+  // duration: string;  <-- ALT (löschen)
+  duration: number;  // <-- NEU (passend zum Service)
+  personName: string;
+  withWhom: string;
+  purpose: string;
+  email: string;
   status: 'pending' | 'confirmed' | 'rejected';
-  userId: number;
 }

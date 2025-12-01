@@ -1,58 +1,279 @@
-/* Monatsansicht */
-.view-switch {
+/* --- Wrapper für Abstand zur Seite --- */
+.calendar-wrapper {
+  padding: 2rem; /* Außenabstand zur Seite */
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- Die Haupt-Karte --- */
+.calendar-card {
+  background: #fff;
+  border-radius: 16px; /* Moderne runde Ecken */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Weicher, tiefer Schatten */
+  overflow: hidden; /* Damit Header-Ecken nicht überstehen */
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
 }
 
-.view-switch button.active {
-  background: #007bff;
+/* --- Header --- */
+.calendar-header {
+  background: linear-gradient(135deg, #6b5ce7 0%, #5a4ad1 100%); /* Leichter Verlauf für Dynamik */
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: white;
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-transform: capitalize;
+  }
 }
 
-.month-grid {
+.nav-controls {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.nav-btn, .today-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+
+  &:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+  }
+  
+  &:active { transform: translateY(0); }
+}
+
+/* --- Grid Layout --- */
+.weekdays-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  background: #f8f9fa;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eef0f5;
+  
+  .weekday {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a0aec0;
+    letter-spacing: 1px;
+  }
 }
 
-.month-day {
-  background: #f9f9f9;
-  border-radius: 6px;
-  padding: 0.4rem;
-  min-height: 90px;
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* Automatische Zeilenhöhe, mindestens 130px für Platz */
+  grid-auto-rows: minmax(130px, 1fr); 
+  background-color: #eef0f5; /* Gitterlinien-Farbe */
+  gap: 1px; /* Erzeugt saubere Linien zwischen den Zellen */
+}
+
+/* --- Die einzelne Tages-Zelle --- */
+.day-cell {
+  background-color: #fff;
+  padding: 8px;
   position: relative;
   cursor: pointer;
-  border: 1px solid #ddd;
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    background-color: #fbfbfc;
+    
+    /* Dynamischer Plus-Button erscheint */
+    .add-overlay {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Tage anderer Monat */
+  &.other-month {
+    background-color: #fcfcfc;
+    .day-number { color: #d1d5db; }
+  }
+
+  /* Heute */
+  &.is-today .day-number {
+    background-color: #6b5ce7;
+    color: white;
+    box-shadow: 0 2px 5px rgba(107, 92, 231, 0.4);
+  }
+
+  /* Ausgewählt */
+  &.is-selected {
+    background-color: #f0f4ff;
+    box-shadow: inset 0 0 0 2px #6b5ce7;
+  }
 }
 
-.month-day.other-month {
-  background: #eee;
-  opacity: 0.6;
+.day-header {
+  display: flex;
+  justify-content: flex-end; /* Datum rechts oben */
+  margin-bottom: 5px;
 }
 
 .day-number {
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-}
-
-.booking-card.small {
-  font-size: 0.7rem;
-  padding: 0.2rem;
-  margin-bottom: 0.2rem;
-}
-
-.add-btn {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  background: #007bff;
-  color: white;
-  width: 22px;
-  height: 22px;
-  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  font-weight: bold;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5568;
 }
+
+/* --- Event Chips (Die "Details") --- */
+.events-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.event-chip {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  
+  /* Farben je nach Status */
+  &.confirmed {
+    background-color: #e6fffa;
+    color: #276749;
+    border-left-color: #38a169;
+  }
+  
+  &.pending {
+    background-color: #fffaf0;
+    color: #9c4221;
+    border-left-color: #ed8936;
+  }
+  
+  &.rejected {
+    background-color: #fff5f5;
+    color: #c53030;
+    border-left-color: #e53e3e;
+  }
+}
+
+.more-events {
+  font-size: 0.7rem;
+  color: #718096;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* --- Hover "Plus" Button --- */
+.add-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0;
+  width: 40px;
+  height: 40px;
+  background-color: #6b5ce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 10px rgba(107, 92, 231, 0.4);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+}
+
+/* --- Modal Styles --- */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex; justify-content: center; align-items: center;
+}
+
+.modal-card {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  overflow: hidden;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  background: #6b5ce7; padding: 1rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  color: white;
+  
+  h3 { margin: 0; font-size: 1.1rem; }
+  .close-icon { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; }
+}
+
+.modal-body { padding: 1.5rem; }
+
+.detailed-event-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.8rem 0; border-bottom: 1px solid #f0f0f0;
+}
+
+.time-col { font-weight: 700; color: #4a5568; font-size: 0.9rem; width: 45px; }
+.info-col { flex: 1; }
+.evt-title { font-weight: 600; color: #2d3748; }
+.evt-person { font-size: 0.8rem; color: #718096; }
+
+.action-col { display: flex; gap: 0.5rem; }
+.icon-btn {
+  border: none; background: #edf2f7; color: #4a5568;
+  width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+
+  &:hover { background: #e2e8f0; }
+  &.delete:hover { background: #fed7d7; color: #e53e3e; }
+}
+
+.btn-primary {
+  width: 100%; padding: 0.8rem; border: none; border-radius: 8px;
+  background: #6b5ce7; color: white; font-weight: 600; cursor: pointer;
+  margin-top: 1rem;
+  &:hover { background: #5a4ad1; }
+}
+
+.btn-text {
+  background: none; border: none; color: #6b5ce7; font-weight: 600; cursor: pointer;
+  margin-top: 1rem; width: 100%;
+}
+.empty-placeholder { text-align: center; color: #a0aec0; padding: 1rem; }

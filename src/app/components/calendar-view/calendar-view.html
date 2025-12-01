@@ -1,91 +1,100 @@
-<div class="calendar-container">
-  <h2>Kalender</h2>
-
-  <!-- Ansicht umschalten -->
-  <div class="view-switch">
-    <button [class.active]="viewMode === 'week'" (click)="setView('week')">Wochenansicht</button>
-    <button [class.active]="viewMode === 'month'" (click)="setView('month')">Monatsansicht</button>
-  </div>
-
-  <!-- Header Navigation -->
-  <div class="calendar-header">
-    <button *ngIf="viewMode === 'week'" (click)="prevWeek()">◀ Vorherige Woche</button>
-    <button *ngIf="viewMode === 'month'" (click)="prevMonth()">◀ Vorheriger Monat</button>
-
-    <!-- Einfache, sichere Pipe-Nutzung -->
-    <span>{{ currentDate | date: 'MMMM yyyy' }}</span>
-
-    <button *ngIf="viewMode === 'week'" (click)="nextWeek()">Nächste Woche ▶</button>
-    <button *ngIf="viewMode === 'month'" (click)="nextMonth()">Nächster Monat ▶</button>
-  </div>
-
-  <!-- Wochenansicht -->
-  <div *ngIf="viewMode === 'week'" class="calendar-grid">
-    <div
-      class="day"
-      *ngFor="let day of getWeekDates()"
-      (click)="selectDay(day)"
-      [class.selected]="selectedDay() && selectedDay()!.toDateString() === day.toDateString()"
-    >
-      <h4>{{ day | date: 'EEE dd.MM' }}</h4>
-
-      <div *ngFor="let booking of getBookingsForDay(day)" class="booking-card">
-        <strong>{{ booking.title }}</strong><br />
-        <span *ngIf="booking.time">{{ booking.time }} Uhr • </span>
-        <small>{{ booking.status }}</small>
+<div class="calendar-wrapper">
+  
+  <div class="calendar-card">
+    
+    <div class="calendar-header">
+      <div class="header-left">
+        <h2>{{ currentDate() | date: 'MMMM yyyy' }}</h2>
       </div>
 
-      <div *ngIf="getBookingsForDay(day).length === 0" class="no-bookings">
-        keine Termine
+      <div class="nav-controls">
+        <button class="nav-btn" (click)="prevMonth()">
+          <span class="icon">❮</span>
+        </button>
+        <button class="today-btn" (click)="goToToday()">Heute</button>
+        <button class="nav-btn" (click)="nextMonth()">
+          <span class="icon">❯</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="weekdays-grid">
+      <div class="weekday">Mo</div>
+      <div class="weekday">Di</div>
+      <div class="weekday">Mi</div>
+      <div class="weekday">Do</div>
+      <div class="weekday">Fr</div>
+      <div class="weekday">Sa</div>
+      <div class="weekday">So</div>
+    </div>
+
+    <div class="days-grid">
+      
+      <div *ngFor="let day of monthDates" 
+           class="day-cell" 
+           (click)="selectDay(day)"
+           [class.other-month]="!isSameMonth(day)"
+           [class.is-today]="isToday(day)"
+           [class.is-selected]="isSelected(day)">
+        
+        <div class="day-header">
+          <span class="day-number">{{ day | date: 'd' }}</span>
+        </div>
+
+        <div class="events-stack">
+          <div *ngFor="let b of getBookingsForDay(day) | slice:0:3" 
+               class="event-chip"
+               [ngClass]="b.status">
+            {{ b.time }} {{ b.title }}
+          </div>
+          
+          <div *ngIf="getBookingsForDay(day).length > 3" class="more-events">
+            + {{ getBookingsForDay(day).length - 3 }} weitere
+          </div>
+        </div>
+
+        <div *ngIf="!isPast(day)" class="add-overlay" (click)="createBooking(day); $event.stopPropagation()">
+          <span class="plus-icon">+</span>
+        </div>
+
       </div>
 
-      <div class="day-actions">
-        <button (click)="createBooking(day); $event.stopPropagation()">➕ Neuer Termin</button>
-      </div>
     </div>
   </div>
 
-  <!-- Monatsansicht -->
-  <div *ngIf="viewMode === 'month'" class="month-grid">
-    <div
-      class="month-day"
-      *ngFor="let day of getMonthDates()"
-      (click)="selectDay(day)"
-      [class.other-month]="day.getMonth() !== currentDate.getMonth()"
-      [class.selected]="selectedDay() && selectedDay()!.toDateString() === day.toDateString()"
-    >
-      <div class="day-number">{{ day.getDate() }}</div>
+</div>
 
-      <div *ngFor="let booking of getBookingsForDay(day)" class="booking-card small">
-        <strong>{{ booking.title }}</strong>
-      </div>
-
-      <div class="add-btn" (click)="createBooking(day); $event.stopPropagation()">+</div>
+<div *ngIf="selectedDay()" class="overlay" (click)="clearSelection()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ selectedDay() | date: 'EEEE, d. MMMM' }}</h3>
+      <button class="close-icon" (click)="clearSelection()">✖</button>
     </div>
-  </div>
+    <div class="modal-body">
+      
+      <div *ngIf="getBookingsForDay(selectedDay()!).length === 0" class="empty-placeholder">
+        <p>Keine Termine geplant.</p>
+        <button *ngIf="!isPast(selectedDay()!)" class="btn-primary" (click)="createBooking(selectedDay()!)">Neuen Termin erstellen</button>
+    </div>
 
-  <!-- Popup -->
-  <div *ngIf="selectedDay()" class="overlay" (click)="clearSelection()">
-    <div class="popup" (click)="$event.stopPropagation()">
-      <h3>Termine am {{ selectedDay() | date: 'EEEE, dd.MM.yyyy' }}</h3>
-
-      <div *ngIf="getBookingsForDay(selectedDay()!).length > 0; else keineTermine">
-        <div *ngFor="let b of getBookingsForDay(selectedDay()!)" class="booking-detail">
-          <strong>{{ b.title }}</strong><br />
-          <span *ngIf="b.time">{{ b.time }} Uhr • </span>
-          {{ b.purpose || '—' }}<br />
-          <small>Status: {{ b.status }}</small>
+      <div class="event-list-scroll">
+        <div *ngFor="let b of getBookingsForDay(selectedDay()!)" class="detailed-event-row">
+          <div class="time-col">{{ b.time }}</div>
+          <div class="info-col">
+            <div class="evt-title">{{ b.title }}</div>
+            <div class="evt-person">👤 {{ b.personName }}</div>
+          </div>
+          <div class="action-col">
+            <button class="icon-btn edit" (click)="router.navigate(['/bookings', b.id])">✎</button>
+            <button class="icon-btn delete" (click)="deleteBooking(b.id)">🗑</button>
+          </div>
         </div>
       </div>
+      
+      <div class="modal-footer" *ngIf="getBookingsForDay(selectedDay()!).length > 0">
+  <button *ngIf="!isPast(selectedDay()!)" class="btn-text" (click)="createBooking(selectedDay()!)">+ Termin hinzufügen</button>
+</div>
 
-      <ng-template #keineTermine>
-        <p>Keine Termine an diesem Tag.</p>
-      </ng-template>
-
-      <div class="popup-actions">
-        <button (click)="createBooking(selectedDay()!)">Neuen Termin anlegen</button>
-        <button class="close" (click)="clearSelection()">Schließen</button>
-      </div>
     </div>
   </div>
 </div>

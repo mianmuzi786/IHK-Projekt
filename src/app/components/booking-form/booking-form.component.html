@@ -1,48 +1,62 @@
-<h2>{{ isEdit ? 'Termin bearbeiten' : 'Neue Buchung' }}</h2>
-
-<form [formGroup]="form" (ngSubmit)="save()">
-  <div>
-    <label>Titel*</label><br />
-    <input formControlName="title" />
+<div class="form-container">
+  
+  <div class="form-header">
+    <h2>{{ isEdit ? 'Termin bearbeiten' : 'Neue Buchung' }}</h2>
+    <button class="btn-ghost" type="button" (click)="cancel()">Abbrechen</button>
   </div>
 
-  <div>
-    <label>Datum*</label><br />
-    <input type="date" formControlName="date" />
-  </div>
+  <form [formGroup]="form" (ngSubmit)="save()" class="booking-form">
+    
+    <div class="form-group full-width">
+      <label for="title">Titel <span class="required">*</span></label>
+      <input id="title" type="text" formControlName="title" placeholder="z.B. Projektbesprechung" 
+             [class.error]="isFieldInvalid('title')">
+      
+      <div class="error-msg" *ngIf="isFieldInvalid('title')">
+        Titel ist erforderlich.
+      </div>
+    </div>
 
-  <div>
-    <label>Zeit</label><br />
-    <input type="time" formControlName="time" />
-  </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Datum <span class="required">*</span></label>
+        <input id="date" type="date" formControlName="date" 
+               [class.error]="isFieldInvalid('date')">
+      </div>
 
-  <div>
-    <label>Person (gebucht für)</label><br />
-    <input formControlName="personName" />
-  </div>
+      <div class="form-group">
+        <label for="time">Uhrzeit <span class="required">*</span></label>
+        <input id="time" type="time" formControlName="time">
+      </div>
+    </div>
 
-  <div>
-    <label>Mit wem</label><br />
-    <input formControlName="withWhom" />
-  </div>
+    <div class="form-row three-cols">
+      <div class="form-group">
+        <label for="personName">Person (gebucht für)</label>
+        <input id="personName" type="text" formControlName="personName" placeholder="Max Mustermann">
+      </div>
 
-  <div>
-    <label>Zweck / Beschreibung</label><br />
-    <textarea formControlName="purpose"></textarea>
-  </div>
+      <div class="form-group">
+        <label for="withWhom">Mit wem</label>
+        <input id="withWhom" type="text" formControlName="withWhom" placeholder="Kunde XY">
+      </div>
 
-  <div>
-    <label>Kontakt-E-Mail</label><br />
-    <input formControlName="email" type="email" />
-  </div>
+      <div class="form-group">
+        <label for="duration">Dauer (Min)</label>
+        <input id="duration" type="number" formControlName="duration" placeholder="60">
+      </div>
+    </div>
 
-  <div>
-    <label>Dauer (Min)</label><br />
-    <input type="number" formControlName="duration" />
-  </div>
+    <div class="form-group full-width">
+      <label for="purpose">Zweck / Beschreibung</label>
+      <textarea id="purpose" formControlName="purpose" rows="4" placeholder="Worum geht es in dem Termin?"></textarea>
+    </div>
 
-  <div style="margin-top:10px;">
-    <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Speichern' : 'Anlegen' }}</button>
-    <button type="button" (click)="cancel()">Abbrechen</button>
-  </div>
-</form>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">
+        {{ isEdit ? 'Änderungen speichern' : 'Termin anlegen' }}
+      </button>
+    </div>
+
+  </form>
+</div>

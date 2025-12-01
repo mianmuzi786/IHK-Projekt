@@ -1,0 +1,176 @@
+/* Container zentriert und wie eine "Karte" gestylt */
+/* booking-form.component.scss */
+
+/* Container: Padding entfernen, damit der Header bis zum Rand geht */
+.form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 0; /* WICHTIG: Hier auf 0 setzen! */
+  overflow: hidden; /* Damit die runden Ecken oben nicht abgeschnitten werden */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header Bereich: Lila Hintergrund */
+.form-header {
+  /* Das ist das Lila aus deinem Screenshot (#6b5ce7) */
+  background-color: #6b5ce7; 
+  /* Alternativ ein kleiner Verlauf für noch mehr "Wow"-Effekt: */
+  /* background: linear-gradient(135deg, #6b5ce7 0%, #5a4ad1 100%); */
+  
+  padding: 1.5rem 2rem; /* Innenabstand für den Header */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #ffffff; /* Text muss jetzt Weiß sein */
+    font-weight: 700;
+  }
+}
+
+/* Der "Abbrechen" Button im Header muss angepasst werden (Weiß auf Lila) */
+.form-header .btn-ghost {
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.form-header .btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: #fff;
+}
+
+/* Das Formular bekommt jetzt das Padding, das wir oben weggenommen haben */
+.booking-form {
+  padding: 2rem; /* WICHTIG: Abstand für die Eingabefelder */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ... Ab hier bleibt der Rest deiner CSS Datei gleich ... */
+/* (form-row, form-group, input, label, etc. müssen nicht geändert werden) */
+/* Grid Layout für das Formular */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Abstand zwischen den Zeilen */
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-row.three-cols > .form-group {
+  flex: 1; /* Alle 3 Spalten gleich breit */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Label Styling */
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.required {
+  color: #dc3545;
+}
+
+/* Input & Textarea Styling */
+input, textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box; /* Wichtig damit Padding nicht die Breite sprengt */
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #3f51b5; /* Akzentfarbe (passend zur Liste) */
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+}
+
+/* Fehlerzustand */
+input.error, textarea.error {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+.error-msg {
+  font-size: 0.8rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+/* Buttons */
+.btn-ghost {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.form-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  background-color: #3f51b5; /* Akzentfarbe */
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #303f9f;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background-color: #a5a5a5;
+  cursor: not-allowed;
+}
+
+/* Responsive Anpassung für Handys */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

@@ -10,7 +10,8 @@ import { Appointment } from '../../models/appointment.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './booking-form.component.html',
-  styleUrls: ['./booking-form.scss']
+  // WICHTIG: Prüfe, ob deine Datei wirklich .component.scss heißt oder nur .scss
+  styleUrls: ['./booking-form.scss'] 
 })
 export class BookingFormComponent implements OnInit {
   form!: FormGroup;
@@ -29,12 +30,12 @@ export class BookingFormComponent implements OnInit {
       id: [0],
       title: ['', Validators.required],
       date: ['', Validators.required],
-      time: [''],
-      duration: [30],
+      time: ['', Validators.required], // Zeit sollte meistens auch Pflicht sein
+      duration: [60, [Validators.min(1)]], // Standarddauer 60 min, keine negativen Zahlen
       personName: [''],
       withWhom: [''],
       purpose: [''],
-      email: [''],
+      email: ['', Validators.email], // Optional: Email-Validierung falls Text eingegeben wird
       status: ['pending']
     });
 
@@ -42,17 +43,19 @@ export class BookingFormComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = Number(idParam);
+      // Achtung: Da wir Signals nutzen, ist getById synchron möglich
       const appointment = this.bookingService.getById(id);
+      
       if (appointment) {
-        this.form.patchValue(appointment);
         this.isEdit = true;
+        this.form.patchValue(appointment);
       } else {
-        alert('Termin nicht gefunden');
+        // Falls Termin gelöscht wurde oder ID falsch ist
         this.router.navigate(['/bookings']);
       }
     }
 
-    // 2️⃣ Prüfen, ob ein Datum über Query-Parameter gesetzt wurde (Kalenderansicht)
+    // 2️⃣ Prüfen, ob ein Datum über Query-Parameter gesetzt wurde (kommt später vom Kalender)
     this.route.queryParams.subscribe(params => {
       if (params['date']) {
         this.form.patchValue({ date: params['date'] });
@@ -60,30 +63,48 @@ export class BookingFormComponent implements OnInit {
     });
   }
 
-  save(): void {
-    if (this.form.invalid) return;
+  // --- NEUE HILFSMETHODE FÜR DAS HTML ---
+  // Prüft, ob ein Feld ungültig UND berührt wurde (für rote Rahmen)
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.form.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
 
-    const val: Appointment = this.form.value;
-    if (this.isEdit && val.id) {
-      this.bookingService.updateBooking(val);
-      alert('Termin aktualisiert');
-    } else {
-      val.id = this.bookingService.nextId();
-      this.bookingService.addBooking(val);
-      alert('Termin angelegt');
+  save(): void {
+    // UX-Tipp für die IHK:
+    // Wenn Formular ungültig ist, markieren wir alles als "touched",
+    // damit die roten Fehlermeldungen sofort aufleuchten.
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
 
-    // Prüfen, ob Redirect-Ziel vorhanden
+    const val: Appointment = this.form.value;
+
+    if (this.isEdit && val.id) {
+      this.bookingService.updateBooking(val);
+      // alert('Termin aktualisiert'); -> Alerts sind oft nicht gern gesehen (UX), aber okay für Prototyp
+    } else {
+      // ID Logik: Im echten Backend macht das die DB. Hier simulieren wir es.
+      val.id = this.bookingService.nextId();
+      this.bookingService.addBooking(val);
+    }
+
+    // Zurück navigieren
+    this.navigateBack();
+  }
+
+  cancel(): void {
+    this.navigateBack();
+  }
+
+  // Kleine Hilfsmethode für das Zurücknavigieren
+  private navigateBack(): void {
     const returnTo = this.route.snapshot.queryParamMap.get('returnTo');
     if (returnTo === 'calendar') {
       this.router.navigate(['/calendar']);
     } else {
       this.router.navigate(['/bookings']);
     }
-  }
-
-
-  cancel(): void {
-    this.router.navigate(['/bookings']);
   }
 }
