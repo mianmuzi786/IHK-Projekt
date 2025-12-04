@@ -112,6 +112,14 @@
   border: 1px solid rgba(255,255,255,0.3);
 }
 
+/* Spezifische Regel für den Highlight-Button, wenn er aktiv ist */
+.nav-item.highlight.active {
+  color: #ffffff !important; /* Erzwingt weiße Schrift */
+  background-color: #304ffe; /* Behält den blauen Hintergrund bei */
+  border-color: rgba(255, 255, 255, 0.5); /* Optional: Heller Rand */
+  box-shadow: none; /* Optional: Kein Schatten, wenn du es flach willst */
+}
+
 .nav-item.highlight:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }

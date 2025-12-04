@@ -58,7 +58,7 @@ import { RouterModule } from '@angular/router';
         <div class="card recent-bookings">
           <div class="card-header">
             <h3>Letzte Buchungen</h3>
-            <a routerLink="/bookings" class="view-all">Alle ansehen</a>
+            <a routerLink="/app/bookings" class="view-all">Alle ansehen</a>
           </div>
           
           <div class="table-responsive">
@@ -89,7 +89,7 @@ import { RouterModule } from '@angular/router';
         <div class="card quick-actions">
           <h3>Schnellzugriff</h3>
           <div class="action-buttons">
-            <button class="action-btn" routerLink="/bookings/new">
+            <button class="action-btn" routerLink="/app/bookings/new">
               <span class="big-icon">➕</span>
               Neuen Termin anlegen
             </button>
