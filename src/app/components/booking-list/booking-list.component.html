@@ -1,14 +1,19 @@
 <div class="booking-container">
-  <header class="list-header">
-    <h2 class="page-title">Termine verwalten</h2>
-    <div class="user-info">
-      <span>Angemeldet als: <strong>Muzzafar Ahmad</strong></span>
+  
+  <div class="list-header-row">
+    <h2 class="page-title" style="margin: 0; color: #333;">Alle Termine</h2>
+    
+    <div class="search-box">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" 
+             placeholder="Suchen (Person, Datum...)" 
+             (input)="updateSearch($event)">
     </div>
-  </header>
+  </div>
 
   <div class="cards-list">
 
-    @for (b of bookings(); track b.id) {
+    @for (b of filteredBookings(); track b.id) {
       
       <div class="booking-card">
         
@@ -42,40 +47,38 @@
 
           <div class="card-actions">
             
-            <button class="btn-outline">
-              🔗 Link
-            </button>
-            
-            <button class="btn-icon check" 
-                    title="Bestätigen"
-                    (click)="confirmBooking(b.id)"
-                    *ngIf="b.status === 'pending'">
-              ✔
-            </button>
+            <ng-container *ngIf="authService.isAdmin()">
+                
+                <button class="btn-icon check" 
+                        title="Bestätigen"
+                        (click)="confirmBooking(b.id)"
+                        *ngIf="b.status === 'pending'">
+                  ✔
+                </button>
 
-            <button class="btn-icon cross" 
-                    title="Ablehnen"
-                    (click)="rejectBooking(b.id)"
-                    *ngIf="b.status === 'pending'">
-              ✖
-            </button>
+                <button class="btn-icon cross" 
+                        title="Ablehnen"
+                        (click)="rejectBooking(b.id)"
+                        *ngIf="b.status === 'pending'">
+                  ✖
+                </button>
 
-            <button class="btn-icon trash" 
-                    title="Löschen"
-                    (click)="deleteBooking(b.id)">
-              🗑
-            </button>
+                <button class="btn-icon trash" 
+                        title="Löschen"
+                        (click)="deleteBooking(b.id)">
+                  🗑
+                </button>
 
-          </div>
+            </ng-container>
 
-          </div>
+            <span *ngIf="!authService.isAdmin()" style="font-size:0.8rem; color:#ccc; margin-left:10px; font-style:italic;">
+              Nur Ansicht
+            </span>
 
-        </div>
-      
-
-    } @empty {
-      <div class="empty-state">
-        <p>Keine Buchungen vorhanden.</p>
+          </div> </div> </div> } @empty {
+      <div class="empty-state" style="text-align:center; padding: 3rem; color: #888;">
+        <i class="bi bi-inbox" style="font-size: 2rem; display:block; margin-bottom: 1rem;"></i>
+        <p>Keine Termine gefunden.</p>
       </div>
     }
 

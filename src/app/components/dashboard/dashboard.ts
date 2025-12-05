@@ -93,7 +93,7 @@ import { RouterModule } from '@angular/router';
               <span class="big-icon">➕</span>
               Neuen Termin anlegen
             </button>
-            <button class="action-btn" routerLink="/calendar">
+            <button class="action-btn" routerLink="/app/calendar">
               <span class="big-icon">📆</span>
               Zum Kalender
             </button>
@@ -238,6 +238,6 @@ export class DashboardComponent {
     // Kopie erstellen und sortieren, dann slice
     return [...this.appointments()]
       .sort((a, b) => b.id - a.id) // Höchste ID zuerst (Neueste)
-      .slice(0, 5);
+      .slice(0, 8);
   });
 }

@@ -174,3 +174,70 @@ input.error, textarea.error {
     gap: 1rem;
   }
 }
+
+/* --- Modal Overlay (Hintergrund abgedunkelt) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Halb-transparent */
+  backdrop-filter: blur(3px); /* Schicker Blur-Effekt */
+  z-index: 2000; /* Ganz oben, über allem anderen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* --- Die Karte --- */
+.modal-card {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- Header --- */
+.modal-header {
+  background: #4caf50; /* Standard: Grün für Erfolg */
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Wenn Typ Fehler ist, wird es Rot */
+  &.error {
+    background: #ef5350; 
+  }
+
+  h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+  .close-btn { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; }
+}
+
+/* --- Body --- */
+.modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.status-icon {
+  font-size: 3rem;
+  color: #4caf50;
+  margin-bottom: 1rem;
+
+  &.error { color: #ef5350; }
+}
+
+.message-text {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+/* Animationen für sanftes Einblenden */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

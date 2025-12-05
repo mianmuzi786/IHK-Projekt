@@ -63,4 +63,29 @@
     </div>
 
   </form>
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header" [class.error]="modalType === 'error'">
+      <h3>{{ modalTitle }}</h3>
+      <button class="close-btn" (click)="closeModal()">✖</button>
+    </div>
+
+    <div class="modal-body">
+      
+      <div class="status-icon" [class.error]="modalType === 'error'">
+        <i class="bi" 
+           [class.bi-check-circle-fill]="modalType === 'success'" 
+           [class.bi-exclamation-triangle-fill]="modalType === 'error'">
+        </i>
+      </div>
+
+      <p class="message-text">{{ modalMessage }}</p>
+
+      <button class="btn-primary" (click)="closeModal()">Verstanden</button>
+    </div>
+
+  </div>
+</div>
 </div>

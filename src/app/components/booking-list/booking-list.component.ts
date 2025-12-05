@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core'; // <--- 'inject' importieren
-import { BookingService } from '../../services/booking.service';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { BookingService } from '../../services/booking.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-booking-list',
@@ -12,14 +13,32 @@ import { RouterModule } from '@angular/router';
 })
 export class BookingListComponent {
   
-  // STATT Constructor nutzen wir inject():
   private bookingService = inject(BookingService);
+  public authService = inject(AuthService);
 
-  // Jetzt funktioniert diese Zeile, weil bookingService oben schon da ist
-  bookings = this.bookingService.appointments;
+  // 1. Signal für Suchtext
+  searchTerm = signal('');
 
-  // Der Constructor kann jetzt komplett weg (oder leer bleiben)
-  // constructor() {} 
+  // 2. Filter-Logik (Jetzt sicher gegen undefined Fehler!)
+  filteredBookings = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    const all = this.bookingService.appointments();
+
+    if (!term) return all; 
+
+    return all.filter(b => 
+      // Wir nutzen ( ... || '') um sicherzugehen, dass es ein String ist
+      (b.title || '').toLowerCase().includes(term) ||
+      (b.personName || '').toLowerCase().includes(term) ||
+      (b.withWhom || '').toLowerCase().includes(term) ||
+      (b.date || '').includes(term)
+    );
+  });
+
+  updateSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+  }
 
   deleteBooking(id: number): void {
     if(confirm('Möchtest du diesen Termin wirklich löschen?')) {

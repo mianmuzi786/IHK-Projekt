@@ -1,16 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
+// Das Interface passen wir an die neue Backend-Antwort an
 interface LoginResponse {
   token: string;
-  // Dein Backend gibt nur token zurück, email speichern wir selbst
+  email: string;
+  role: string; // NEU: Das Backend schickt jetzt "ADMIN" oder "USER"
 }
 
 @Injectable({
@@ -20,58 +17,61 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  // Passe die URL an dein Backend an!
   private apiUrl = 'http://localhost:8080/api/auth';
   
-  // Signal für Login-Status
-  isLoggedIn = signal<boolean>(this.hasToken());
+  // WICHTIG: Der Name muss zum Interceptor passen! 
+  // Wir nutzen hier 'auth_token', da wir das im Interceptor so festgelegt haben.
+  private tokenKey = 'auth_token'; 
 
-  constructor() {
-    // Beim Start prüfen, ob Token vorhanden ist
-    this.isLoggedIn.set(this.hasToken());
-  }
+  // --- SIGNALS FÜR DIE OBERFLÄCHE ---
+  // Damit können wir im HTML direkt {{ authService.currentUserEmail() }} schreiben
+  currentUserEmail = signal<string>(localStorage.getItem('auth_email') || '');
+  currentUserRole = signal<string>(localStorage.getItem('auth_role') || '');
 
-  // Login-Request an Backend
-  login(email: string, password: string): Observable<LoginResponse> {
+  // Login
+  login(email: string, password: string) {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
-          // Token speichern
-          localStorage.setItem('jwt_token', response.token);
-          localStorage.setItem('user_email', email); // Email selbst speichern
-          this.isLoggedIn.set(true);
-          console.log('✅ Login erfolgreich, Token gespeichert');
+          // 1. Alles im Browser-Speicher ablegen (fürs Neuladen der Seite)
+          localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem('auth_email', response.email);
+          localStorage.setItem('auth_role', response.role);
+
+          // 2. Signals sofort updaten (damit sich Header/Menü sofort ändern)
+          this.currentUserEmail.set(response.email);
+          this.currentUserRole.set(response.role);
+          
+          console.log('✅ Login erfolgreich als:', response.role);
         })
       );
   }
 
   // Logout
-  logout(): void {
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('user_email');
-    localStorage.removeItem('user_role');
-    this.isLoggedIn.set(false);
+  logout() {
+    // Alles löschen
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('auth_email');
+    localStorage.removeItem('auth_role');
+    
+    // Signals leeren
+    this.currentUserEmail.set('');
+    this.currentUserRole.set('');
+    
+    // Zum Login leiten
     this.router.navigate(['/login']);
-    console.log('✅ Logout erfolgreich');
   }
 
-  // Token vorhanden?
-  hasToken(): boolean {
-    return !!localStorage.getItem('jwt_token');
+  // --- HILFSMETHODEN ---
+
+  // Prüft, ob jemand eingeloggt ist (Token existiert)
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem(this.tokenKey);
   }
 
-  // Token abrufen
-  getToken(): string | null {
-    return localStorage.getItem('jwt_token');
-  }
-
-  // User Email abrufen
-  getUserEmail(): string | null {
-    return localStorage.getItem('user_email');
-  }
-
-  // User Role abrufen
-  getUserRole(): string | null {
-    return localStorage.getItem('user_role');
+  // NEU: Prüft, ob der aktuelle User ein Admin ist
+  // Das brauchen wir gleich für das *ngIf bei den Buttons
+  isAdmin(): boolean {
+    return this.currentUserRole() === 'ADMIN';
   }
 }
